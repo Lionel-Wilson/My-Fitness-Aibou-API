@@ -6,6 +6,7 @@ import {
   Card,
   CssBaseline,
   CssVarsProvider,
+  Divider,
   Link,
   Typography,
 } from "@mui/joy";
@@ -164,9 +165,9 @@ export default function Workouts({ params }: { params: { username: string } }) {
                 justifyContent: {
                   xs: "center",
                   sm: "center",
-                  md: "space-evenly",
-                  lg: "space-evenly",
-                  xl: "space-evenly",
+                  md: "center",
+                  lg: "center",
+                  xl: "center",
                 },
                 flexDirection: {
                   xs: "column",
@@ -178,39 +179,92 @@ export default function Workouts({ params }: { params: { username: string } }) {
               }}
             >
               {workoutsExist ? (
-                <Box ml={4} mr={4} mt={4}>
+                <Box
+                  mt={4}
+                  sx={{
+                    display: "flex",
+                    justifyContent: {
+                      xs: "center",
+                      sm: "center",
+                      md: "center",
+                      lg: "center",
+                      xl: "center",
+                    },
+                  }}
+                >
                   <Card
                     size="lg"
                     sx={{
                       width: {
-                        xs: 300,
-                        sm: 320,
+                        xs: 382,
+                        sm: 382,
                         md: 500,
                         lg: 500,
                         xl: 500,
                       },
                     }}
                   >
-                    <Typography level="body-md" component="p">
-                      You have workouts.
-                    </Typography>
+                    <Box>
+                      <Typography level="title-lg" component="h1">
+                        Back Workout 1
+                      </Typography>
+                      <Typography level="body-md" component="h2">
+                        Calistenic focused
+                      </Typography>
+                    </Box>
+
+                    <Divider />
+                    <Box>
+                      <Typography level="title-lg" component="h1">
+                        Chest Workout 1
+                      </Typography>
+                      <Typography level="body-md" component="h2">
+                        Weight focused
+                      </Typography>
+                    </Box>
+                    <Divider />
+
+                    <Box>
+                      <Typography level="title-lg" component="h1">
+                        Leg Workout 1
+                      </Typography>
+                      <Typography level="body-md" component="h2">
+                        For knee, ankle and hamstring and glutes stre...
+                      </Typography>
+                    </Box>
                   </Card>
                 </Box>
               ) : (
-                <Box ml={4} mr={4} mt={4}>
+                <Box
+                  mt={4}
+                  sx={{
+                    display: "flex",
+                    justifyContent: {
+                      xs: "center",
+                      sm: "center",
+                      md: "center",
+                      lg: "center",
+                      xl: "center",
+                    },
+                  }}
+                >
                   <Card
                     size="lg"
                     sx={{
                       width: {
-                        xs: 300,
-                        sm: 320,
+                        xs: 420,
+                        sm: 420,
                         md: 500,
                         lg: 500,
                         xl: 500,
                       },
                     }}
                   >
-                    <Typography level="body-md" component="p">
+                    <Typography
+                      textAlign={"center"}
+                      level="body-md"
+                      component="p"
+                    >
                       You have no workouts.
                     </Typography>
                   </Card>
