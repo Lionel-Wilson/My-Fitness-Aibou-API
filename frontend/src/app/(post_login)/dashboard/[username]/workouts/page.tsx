@@ -155,8 +155,10 @@ export default function Workouts({ params }: { params: { username: string } }) {
                 startDecorator={<Add />}
                 variant="solid"
                 color="primary"
+                component="a"
+                href={`/dashboard/${params.username}/workouts/create_workout`}
               >
-                Create Workout
+                Create New Workout
               </Button>
             </Box>
             <Box
