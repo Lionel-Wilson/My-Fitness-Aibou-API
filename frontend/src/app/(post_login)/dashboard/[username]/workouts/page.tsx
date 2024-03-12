@@ -66,6 +66,7 @@ export default function Workouts({ params }: { params: { username: string } }) {
         defaultColorScheme="light"
         disableNestedContext
       >
+        <CssBaseline />
         <Box sx={{ display: "flex", minHeight: "100dvh" }}>
           <Header />
           <Sidebar usernameSlug={params.username} />
@@ -148,7 +149,12 @@ export default function Workouts({ params }: { params: { username: string } }) {
                 },
               }}
             >
-              <Button startDecorator={<Add />} variant="solid" color="primary">
+              <Button
+                className="bg-blue-700"
+                startDecorator={<Add />}
+                variant="solid"
+                color="primary"
+              >
                 Create Workout
               </Button>
             </Box>

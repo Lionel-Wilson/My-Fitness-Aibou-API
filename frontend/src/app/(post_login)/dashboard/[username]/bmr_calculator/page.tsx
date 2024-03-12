@@ -81,6 +81,7 @@ export default function BmrCalculator({
         defaultColorScheme="light"
         defaultMode="light"
       >
+        <CssBaseline />
         <Box sx={{ display: "flex", minHeight: "100dvh" }}>
           <Header />
           <Sidebar usernameSlug={params.username} />
@@ -261,7 +262,11 @@ export default function BmrCalculator({
                     />
                     <br></br>
 
-                    <Button type="submit" variant="outlined">
+                    <Button
+                      className="bg-blue-700"
+                      type="submit"
+                      variant="solid"
+                    >
                       Calculate
                     </Button>
                   </FormControl>

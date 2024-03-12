@@ -44,6 +44,7 @@ export default function Page({ params }: { params: { username: string } }) {
         defaultColorScheme="light"
         defaultMode="light"
       >
+        <CssBaseline />
         <Box sx={{ display: "flex", minHeight: "100dvh" }}>
           <Header />
           <Sidebar usernameSlug={params.username} />
