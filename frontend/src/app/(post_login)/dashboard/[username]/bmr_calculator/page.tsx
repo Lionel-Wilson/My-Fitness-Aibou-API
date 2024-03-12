@@ -75,7 +75,12 @@ export default function BmrCalculator({
 
   return (
     <>
-      <CssVarsProvider disableTransitionOnChange>
+      <CssVarsProvider
+        disableTransitionOnChange
+        modeStorageKey="joy-bmr-calculator-color-scheme"
+        defaultColorScheme="light"
+        defaultMode="light"
+      >
         <CssBaseline />
         <Box sx={{ display: "flex", minHeight: "100dvh" }}>
           <Header />
@@ -257,7 +262,11 @@ export default function BmrCalculator({
                     />
                     <br></br>
 
-                    <Button type="submit" variant="outlined">
+                    <Button
+                      className="bg-blue-700"
+                      type="submit"
+                      variant="solid"
+                    >
                       Calculate
                     </Button>
                   </FormControl>

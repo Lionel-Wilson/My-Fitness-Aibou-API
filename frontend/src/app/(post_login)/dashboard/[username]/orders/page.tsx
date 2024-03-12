@@ -38,7 +38,12 @@ export default function Page({ params }: { params: { username: string } }) {
     </div>
   </div>
   */}
-      <CssVarsProvider disableTransitionOnChange>
+      <CssVarsProvider
+        disableTransitionOnChange
+        modeStorageKey="joy-orders-color-scheme"
+        defaultColorScheme="light"
+        defaultMode="light"
+      >
         <CssBaseline />
         <Box sx={{ display: "flex", minHeight: "100dvh" }}>
           <Header />

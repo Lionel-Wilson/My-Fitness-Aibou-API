@@ -1,24 +1,19 @@
 "use client";
-import SideNav from "@/app/(post_login)/dashboard/components/sidenav";
 import { useEffect, useState } from "react";
 
 //JoyUI imports:
 import * as React from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
-import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
 
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
 import Sidebar from "../components/JoyUI/Sidebar";
-import OrderTable from "../components/JoyUI/OrderTable";
-import OrderList from "../components/JoyUI/OrderList";
+
 import Header from "../components/JoyUI/Header";
 import DonutChart from "../components/tremor/DonutChart";
 import LineChartUsageExample from "../components/tremor/LineChart";
@@ -84,8 +79,7 @@ export default function Page({ params }: { params: { username: string } }) {
       </div>
     </div>
     */}
-      <CssVarsProvider disableTransitionOnChange>
-        <CssBaseline />
+      <CssVarsProvider disableTransitionOnChange defaultMode="light">
         <Box sx={{ display: "flex", minHeight: "100dvh" }}>
           <Header />
           <Sidebar usernameSlug={params.username} />

@@ -243,7 +243,13 @@ export default function Sidebar({ usernameSlug }: { usernameSlug: string }) {
             >
               <List sx={{ gap: 0.5 }}>
                 <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>Create Workout</ListItemButton>
+                  <ListItemButton
+                    role="menuitem"
+                    component="a"
+                    href={`/dashboard/${usernameSlug}/workouts`}
+                  >
+                    Workouts
+                  </ListItemButton>
                 </ListItem>
 
                 <ListItem>
