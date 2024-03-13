@@ -26,9 +26,69 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import Add from "@mui/icons-material/Add";
 import * as React from "react";
 
+function ExerciseItem({ exercise, index }: { exercise: Exercise; index: any }) {
+  if (index != 0) {
+    return (
+      <>
+        <Divider />
+        <Box>
+          <Typography level="title-lg" component="h1">
+            {exercise.name} - {exercise.currentWeight}kg x{" "}
+            {exercise.currentMaxReps} for {exercise.sets} sets
+          </Typography>
+          <Typography level="body-md" component="h2">
+            {exercise.notes}
+          </Typography>
+        </Box>
+      </>
+    );
+  } else {
+    return (
+      <Box>
+        <Typography level="title-lg" component="h1">
+          {exercise.name} - {exercise.currentWeight}kg x{" "}
+          {exercise.currentMaxReps} for {exercise.sets} sets
+        </Typography>
+        <Typography level="body-md" component="h2">
+          {exercise.notes}
+        </Typography>
+      </Box>
+    );
+  }
+}
+
 export default function Workouts({ params }: { params: { username: string } }) {
   const [open, setOpen] = React.useState<boolean>(false);
+  const [workoutStore, updateWorkoutStore] = React.useState<workoutStore>({
+    notes: "",
+    exercises: [],
+  });
+  const [exerciseStore, updateExerciseStore] = React.useState<Exercise[]>([]);
   var workoutsExist = true;
+
+  function addExerciseToWorkout(data: FormData) {
+    setOpen(false);
+
+    var exercises = [];
+
+    var name = data.get("name") as string;
+    var notes = data.get("notes") as string;
+    var currentWeight = data.get("current-weight") as string;
+    var reps = data.get("max-reps") as string;
+    var sets = data.get("sets") as string;
+    var exercise: Exercise = {
+      id: self.crypto.randomUUID(),
+      name: name,
+      notes: notes,
+      currentWeight: parseInt(currentWeight, 10),
+      currentMaxReps: parseInt(reps, 10),
+      sets: parseInt(sets, 10),
+    };
+
+    exercises = [...exerciseStore, exercise]; // https://react.dev/learn/updating-arrays-in-state#updating-arrays-without-mutation
+
+    updateExerciseStore(exercises);
+  }
 
   return (
     <>
@@ -71,7 +131,7 @@ export default function Workouts({ params }: { params: { username: string } }) {
                 <Link
                   underline="none"
                   color="neutral"
-                  href="#some-link"
+                  href={`/dashboard/${params.username}`}
                   aria-label="Home"
                 >
                   <HomeRoundedIcon />
@@ -79,7 +139,16 @@ export default function Workouts({ params }: { params: { username: string } }) {
                 <Link
                   underline="hover"
                   color="neutral"
-                  href="#some-link"
+                  href={`/dashboard/${params.username}/workouts`}
+                  fontSize={12}
+                  fontWeight={500}
+                >
+                  Workouts
+                </Link>
+                <Link
+                  underline="hover"
+                  color="neutral"
+                  href={`/dashboard/${params.username}/workouts/create_workout`}
                   fontSize={12}
                   fontWeight={500}
                 >
@@ -135,34 +204,35 @@ export default function Workouts({ params }: { params: { username: string } }) {
                   <ModalDialog>
                     <DialogTitle>Add new exercise</DialogTitle>
                     <DialogContent>
-                      Fill in the exercise information.
+                      Fill in the exercise information. All weights in KG
                     </DialogContent>
                     <form
-                      onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+                      action={addExerciseToWorkout}
+                      /*onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
                         setOpen(false);
-                      }}
+                      }}*/
                     >
                       <Stack spacing={2}>
                         <FormControl>
                           <FormLabel>Name</FormLabel>
-                          <Input autoFocus required />
+                          <Input autoFocus required type="text" name="name" />
                         </FormControl>
                         <FormControl>
                           <FormLabel>Notes</FormLabel>
-                          <Textarea minRows={2} size="md" />
+                          <Textarea minRows={2} size="md" name="notes" />
                         </FormControl>
                         <FormControl>
                           <FormLabel>Current Weight</FormLabel>
-                          <Input />
+                          <Input type="number" name="current-weight" />
                         </FormControl>
                         <FormControl>
                           <FormLabel>Current number of max reps</FormLabel>
-                          <Input />
+                          <Input type="number" name="max-reps" />
                         </FormControl>
                         <FormControl>
                           <FormLabel>Number of sets</FormLabel>
-                          <Input />
+                          <Input type="number" name="sets" />
                         </FormControl>
                         <Button
                           type="submit"
@@ -279,16 +349,29 @@ export default function Workouts({ params }: { params: { username: string } }) {
                     },
                   }}
                 >
-                  <Box>
-                    <Typography level="title-lg" component="h1">
-                      Pull ups
-                    </Typography>
-                    <Typography level="body-md" component="h2">
-                      Calistenic focused
-                    </Typography>
-                  </Box>
+                  {exerciseStore.length != 0 ? (
+                    exerciseStore.map((exercise, index) => (
+                      <ExerciseItem
+                        key={exercise.id}
+                        exercise={exercise}
+                        index={index}
+                      />
+                    ))
+                  ) : (
+                    <Box
+                      key="no-exercises"
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography level="body-md" component="h2">
+                        No exercises. Try adding some!
+                      </Typography>
+                    </Box>
+                  )}
 
-                  <Divider />
+                  {/*<Divider />
                   <Box>
                     <Typography level="title-lg" component="h1">
                       Bench Press
@@ -296,7 +379,7 @@ export default function Workouts({ params }: { params: { username: string } }) {
                     <Typography level="body-md" component="h2">
                       Weight focused
                     </Typography>
-                  </Box>
+                  </Box>*/}
                 </Card>
               </Box>
             </Box>
