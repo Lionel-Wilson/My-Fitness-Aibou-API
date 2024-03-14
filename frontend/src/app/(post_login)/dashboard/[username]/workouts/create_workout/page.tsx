@@ -89,6 +89,11 @@ export default function Workouts({ params }: { params: { username: string } }) {
 
     updateExerciseStore(exercises);
   }
+  function createWorkout(data: FormData) {
+    console.log("Workout created");
+    console.log(data.get("workout-name"));
+    console.log(exerciseStore);
+  }
 
   return (
     <>
@@ -249,28 +254,8 @@ export default function Workouts({ params }: { params: { username: string } }) {
                 </Modal>
               </React.Fragment>
             </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: {
-                  xs: "center",
-                  sm: "center",
-                  md: "center",
-                  lg: "center",
-                  xl: "center",
-                },
-                flexDirection: {
-                  xs: "column",
-                  sm: "column",
-                  md: "row",
-                  lg: "row",
-                  xl: "row",
-                },
-              }}
-            >
+            <form action={createWorkout}>
               <Box
-                mt={4}
-                mb={4}
                 sx={{
                   display: "flex",
                   justifyContent: {
@@ -280,17 +265,122 @@ export default function Workouts({ params }: { params: { username: string } }) {
                     lg: "center",
                     xl: "center",
                   },
+                  flexDirection: {
+                    xs: "column",
+                    sm: "column",
+                    md: "row",
+                    lg: "row",
+                    xl: "row",
+                  },
                 }}
               >
-                <FormControl>
-                  <FormLabel>
-                    <Typography level="title-lg" component="h1">
-                      Notes
-                    </Typography>
-                  </FormLabel>
+                <Box
+                  mt={4}
+                  sx={{
+                    display: "flex",
+                    justifyContent: {
+                      xs: "center",
+                      sm: "center",
+                      md: "center",
+                      lg: "center",
+                      xl: "center",
+                    },
+                  }}
+                >
+                  <FormControl>
+                    <FormLabel>
+                      <Typography level="title-lg" component="h1">
+                        Workout Name
+                      </Typography>
+                    </FormLabel>
 
-                  <Textarea
-                    minRows={2}
+                    <Input
+                      type="text"
+                      name="workout-name"
+                      size="lg"
+                      sx={{
+                        width: {
+                          xs: 382,
+                          sm: 382,
+                          md: 500,
+                          lg: 500,
+                          xl: 500,
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Box>
+                <Box
+                  mt={4}
+                  mb={4}
+                  sx={{
+                    display: "flex",
+                    justifyContent: {
+                      xs: "center",
+                      sm: "center",
+                      md: "center",
+                      lg: "center",
+                      xl: "center",
+                    },
+                  }}
+                >
+                  <FormControl>
+                    <FormLabel>
+                      <Typography level="title-lg" component="h1">
+                        Notes
+                      </Typography>
+                    </FormLabel>
+
+                    <Textarea
+                      minRows={2}
+                      size="lg"
+                      sx={{
+                        width: {
+                          xs: 382,
+                          sm: 382,
+                          md: 500,
+                          lg: 500,
+                          xl: 500,
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </Box>
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: {
+                    xs: "center",
+                    sm: "center",
+                    md: "center",
+                    lg: "center",
+                    xl: "center",
+                  },
+                  flexDirection: {
+                    xs: "column",
+                    sm: "column",
+                    md: "row",
+                    lg: "row",
+                    xl: "row",
+                  },
+                }}
+              >
+                <Box
+                  mb={4}
+                  sx={{
+                    display: "flex",
+                    justifyContent: {
+                      xs: "center",
+                      sm: "center",
+                      md: "center",
+                      lg: "center",
+                      xl: "center",
+                    },
+                  }}
+                >
+                  <Card
                     size="lg"
                     sx={{
                       width: {
@@ -301,31 +391,32 @@ export default function Workouts({ params }: { params: { username: string } }) {
                         xl: 500,
                       },
                     }}
-                  />
-                </FormControl>
+                  >
+                    {exerciseStore.length != 0 ? (
+                      exerciseStore.map((exercise, index) => (
+                        <ExerciseItem
+                          key={exercise.id}
+                          exercise={exercise}
+                          index={index}
+                        />
+                      ))
+                    ) : (
+                      <Box
+                        key="no-exercises"
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Typography level="body-md" component="h2">
+                          No exercises. Try adding some!
+                        </Typography>
+                      </Box>
+                    )}
+                  </Card>
+                </Box>
               </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: {
-                  xs: "center",
-                  sm: "center",
-                  md: "center",
-                  lg: "center",
-                  xl: "center",
-                },
-                flexDirection: {
-                  xs: "column",
-                  sm: "column",
-                  md: "row",
-                  lg: "row",
-                  xl: "row",
-                },
-              }}
-            >
               <Box
-                mb={4}
                 sx={{
                   display: "flex",
                   justifyContent: {
@@ -335,83 +426,26 @@ export default function Workouts({ params }: { params: { username: string } }) {
                     lg: "center",
                     xl: "center",
                   },
+                  flexDirection: {
+                    xs: "column",
+                    sm: "column",
+                    md: "column",
+                    lg: "column",
+                    xl: "column",
+                  },
                 }}
               >
-                <Card
-                  size="lg"
-                  sx={{
-                    width: {
-                      xs: 382,
-                      sm: 382,
-                      md: 500,
-                      lg: 500,
-                      xl: 500,
-                    },
-                  }}
+                <Button
+                  className="bg-blue-700"
+                  startDecorator={<Add />}
+                  variant="solid"
+                  color="primary"
+                  type="submit"
                 >
-                  {exerciseStore.length != 0 ? (
-                    exerciseStore.map((exercise, index) => (
-                      <ExerciseItem
-                        key={exercise.id}
-                        exercise={exercise}
-                        index={index}
-                      />
-                    ))
-                  ) : (
-                    <Box
-                      key="no-exercises"
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Typography level="body-md" component="h2">
-                        No exercises. Try adding some!
-                      </Typography>
-                    </Box>
-                  )}
-
-                  {/*<Divider />
-                  <Box>
-                    <Typography level="title-lg" component="h1">
-                      Bench Press
-                    </Typography>
-                    <Typography level="body-md" component="h2">
-                      Weight focused
-                    </Typography>
-                  </Box>*/}
-                </Card>
+                  Create workout
+                </Button>
               </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: {
-                  xs: "center",
-                  sm: "center",
-                  md: "center",
-                  lg: "center",
-                  xl: "center",
-                },
-                flexDirection: {
-                  xs: "column",
-                  sm: "column",
-                  md: "column",
-                  lg: "column",
-                  xl: "column",
-                },
-              }}
-            >
-              <Button
-                className="bg-blue-700"
-                startDecorator={<Add />}
-                variant="solid"
-                color="primary"
-                type="submit"
-              >
-                Create workout
-              </Button>
-            </Box>
+            </form>
           </Box>
         </Box>
       </CssVarsProvider>
