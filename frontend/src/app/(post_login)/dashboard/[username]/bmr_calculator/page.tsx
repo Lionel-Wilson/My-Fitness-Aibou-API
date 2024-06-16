@@ -62,6 +62,7 @@ export default function BmrCalculator({
       })
       .then((data) => {
         setBmrResult(data);
+        clearForm();
       });
   }
 
@@ -186,90 +187,109 @@ export default function BmrCalculator({
                     },
                   }}
                 >
-                  <FormControl>
-                    <FormLabel
-                      sx={{
-                        fontSize: {
-                          xs: 14,
-                          sm: 14,
-                          md: 16,
-                          lg: 16,
-                          xl: 16,
-                        },
-                      }}
-                    >
-                      Gender
-                    </FormLabel>
-                    <Select defaultValue="Male" placeholder="Choose one…">
-                      <Option value="Male">Male</Option>
-                      <Option value="Female">Female</Option>
-                    </Select>
+                  <form
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      const formData = new FormData(event.currentTarget);
+                      getBmr(formData);
+                    }}
+                    id="bmr-form"
+                  >
+                    <FormControl>
+                      <FormLabel
+                        sx={{
+                          fontSize: {
+                            xs: 14,
+                            sm: 14,
+                            md: 16,
+                            lg: 16,
+                            xl: 16,
+                          },
+                        }}
+                      >
+                        Gender
+                      </FormLabel>
+                      <Select
+                        defaultValue="Male"
+                        placeholder="Choose one…"
+                        name="gender"
+                        required
+                      >
+                        <Option value="Male">Male</Option>
+                        <Option value="Female">Female</Option>
+                      </Select>
+                    </FormControl>
                     <br></br>
-                    <FormLabel
-                      sx={{
-                        fontSize: {
-                          xs: 14,
-                          sm: 14,
-                          md: 16,
-                          lg: 16,
-                          xl: 16,
-                        },
-                      }}
-                    >
-                      Weight
-                    </FormLabel>
-                    <Input placeholder="70" required />
-                    <FormHelperText>(in kilograms)</FormHelperText>
-                    <br></br>
-                    <FormLabel
-                      sx={{
-                        fontSize: {
-                          xs: 14,
-                          sm: 14,
-                          md: 16,
-                          lg: 16,
-                          xl: 16,
-                        },
-                      }}
-                    >
-                      Height
-                    </FormLabel>
-                    <Input placeholder="180" required />
-                    <FormHelperText>(in centimeters)</FormHelperText>
-                    <br></br>
-                    <FormLabel
-                      sx={{
-                        fontSize: {
-                          xs: 14,
-                          sm: 14,
-                          md: 16,
-                          lg: 16,
-                          xl: 16,
-                        },
-                      }}
-                    >
-                      Age
-                    </FormLabel>
-                    <Input
-                      placeholder="24"
-                      sx={{
-                        id: "age",
-                        name: "age",
-                        type: "number",
-                        autoComplete: "age",
-                      }}
-                      required
-                    />
-                    <br></br>
+                    <FormControl>
+                      <FormLabel
+                        sx={{
+                          fontSize: {
+                            xs: 14,
+                            sm: 14,
+                            md: 16,
+                            lg: 16,
+                            xl: 16,
+                          },
+                        }}
+                      >
+                        Weight
+                      </FormLabel>
+                      <Input placeholder="70" name="weight" required />
+                      <FormHelperText>(in kilograms)</FormHelperText>
+                    </FormControl>
 
-                    <Button
-                      className="bg-blue-700"
-                      type="submit"
-                      variant="solid"
-                    >
-                      Calculate
-                    </Button>
-                  </FormControl>
+                    <br></br>
+                    <FormControl>
+                      <FormLabel
+                        sx={{
+                          fontSize: {
+                            xs: 14,
+                            sm: 14,
+                            md: 16,
+                            lg: 16,
+                            xl: 16,
+                          },
+                        }}
+                      >
+                        Height
+                      </FormLabel>
+                      <Input placeholder="180" name="height" required />
+                      <FormHelperText>(in centimeters)</FormHelperText>
+                    </FormControl>
+
+                    <br></br>
+                    <FormControl>
+                      <FormLabel
+                        sx={{
+                          fontSize: {
+                            xs: 14,
+                            sm: 14,
+                            md: 16,
+                            lg: 16,
+                            xl: 16,
+                          },
+                        }}
+                      >
+                        Age
+                      </FormLabel>
+                      <Input placeholder="24" name="age" required />
+                    </FormControl>
+                    <br></br>
+                    <FormControl>
+                      <Button
+                        className="bg-blue-700"
+                        type="submit"
+                        variant="solid"
+                      >
+                        Calculate
+                      </Button>
+                    </FormControl>
+                  </form>
+                  <div>
+                    <h1 className="text-2xl font-semibold leading-7">
+                      {bmrResult ?? bmrResult}
+                    </h1>
+                  </div>
                 </Card>
               </Box>
             </Box>
