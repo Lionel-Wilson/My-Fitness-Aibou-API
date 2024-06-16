@@ -7,8 +7,6 @@ export async function POST(request: Request) {
   const go_server_url = await process.env.GO_SERVER_URL;
 
   const loginDetails = await request.json();
-  console.log("login details:");
-  console.log(loginDetails);
 
   const res = await fetch(go_server_url + "/user/login", {
     method: "POST",

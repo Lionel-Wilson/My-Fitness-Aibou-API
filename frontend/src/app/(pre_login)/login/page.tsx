@@ -30,9 +30,6 @@ export default function Login() {
       clearForm("login-form");
       return;
     }
-    console.log("Res.url:");
-    console.log(res.url);
-    console.log(res);
 
     redirect(res.url);
   }

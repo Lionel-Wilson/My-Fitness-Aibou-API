@@ -27,6 +27,7 @@ func (app *application) routes() http.Handler {
 	router.Post("/user/login", dynamicMiddleware.ThenFunc(app.loginUser))
 	router.Post("/user/logout", dynamicMiddleware.ThenFunc(app.logoutUser))
 	router.Post("/user/details", dynamicMiddleware.ThenFunc(app.getUserDetails))
+	router.Post("/user/authenticate", dynamicMiddleware.ThenFunc(app.authenticateUser))
 
 	//Kitchen Features
 	router.Post("/kitchen/bmr", http.HandlerFunc(app.GetBMR))

@@ -200,6 +200,34 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Logout the user...")
 }
+
+func (app *application) authenticateUser(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
+
+	var userId int
+
+	err = json.Unmarshal(body, &userId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	_, err = app.users.Get(userId)
+	if err == models.ErrNoRecord {
+		http.Error(w, fmt.Sprintf("User doesn't exist for provided userID - %d", userId), http.StatusInternalServerError)
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 func (app *application) getUserDetails(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {

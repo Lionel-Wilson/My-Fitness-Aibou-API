@@ -18,7 +18,6 @@ import Header from "../components/JoyUI/Header";
 import DonutChart from "../components/tremor/DonutChart";
 import LineChartUsageExample from "../components/tremor/LineChart";
 import Divider from "@mui/material/Divider";
-
 //JoyUI imports end
 
 export default function Page({ params }: { params: { username: string } }) {
@@ -33,19 +32,13 @@ export default function Page({ params }: { params: { username: string } }) {
     dob: "", // You might want to initialize it based on your date format
     gender: "",
   });
-  //const cookies = new Cookies();
-  //const storedUserID = cookies.get("userID");
 
   useEffect(() => {
     const getUniqueUser = async () => {
       try {
-        console.log("trying get request");
-
         const response = await fetch("/api/get_user_details", {
           method: "GET",
         });
-        console.log("back from trying get request");
-        console.log(response);
 
         const userDetails: UserDetails = await response.json();
 
