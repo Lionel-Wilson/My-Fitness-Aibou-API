@@ -15,21 +15,18 @@ function classNames(...classes: string[]) {
 
 const data = [
   {
-    name: "Base Goal",
+    name: "Goal Calories",
     amount: 1940,
-    share: "32.1%",
     color: "bg-cyan-500",
   },
   {
     name: "Food",
     amount: 1200,
-    share: "19.6%",
     color: "bg-blue-500",
   },
   {
     name: "Exercise",
     amount: 150,
-    share: "18.6%",
     color: "bg-indigo-500",
   },
 ];
@@ -42,9 +39,18 @@ function calculateCalorieProgress() {
   var progress = ((food - exercise) / basegoal) * 100;
   return progress;
 }
+function calculateRemainingCalories() {
+  var basegoal = data[0].amount;
+  var food = data[1].amount;
+  var exercise = data[2].amount;
+
+  var remaining = basegoal - food + exercise;
+  return remaining;
+}
 
 export default function Example() {
   var progress = calculateCalorieProgress();
+  var remainingCalories = calculateRemainingCalories();
   return (
     <>
       <Card className="sm:mx-auto sm:max-w-lg">
