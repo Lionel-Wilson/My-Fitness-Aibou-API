@@ -13,12 +13,12 @@ type UpdateWorkoutRequest struct {
 }
 
 type Exercise struct {
-	Id           int    `json:"exerciseId"`
-	ExerciseName string `json:"exerciseName" validate:"required,ascii"`
-	Weight       int    `json:"weight" validate:"required,number,gt=0"`
-	Reps         int    `json:"reps" validate:"required,number,gt=0"`
-	Sets         int    `json:"sets" validate:"required,number,gt=0"`
-	Notes        string `json:"notes" validate:"ascii,max=250"`
+	Id           int     `json:"exerciseId"`
+	ExerciseName string  `json:"exerciseName" validate:"required,ascii"`
+	Weight       float64 `json:"weight" validate:"required,number,gt=0"`
+	Reps         int     `json:"reps" validate:"required,number,gt=0"`
+	Sets         int     `json:"sets" validate:"required,number,gt=0"`
+	Notes        string  `json:"notes" validate:"ascii,max=250"`
 }
 
 type Workout struct {

@@ -14,6 +14,7 @@ type Application struct {
 	Workouts  *mysql.WorkoutModel
 	Users     *mysql.UserModel
 	Exercises *mysql.ExerciseModel
+	Health    *mysql.HealthModel
 }
 
 var (

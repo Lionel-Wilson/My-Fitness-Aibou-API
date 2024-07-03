@@ -64,6 +64,7 @@ func main() {
 		Workouts:  &mysql.WorkoutModel{DB: db},
 		Users:     &mysql.UserModel{DB: db},
 		Exercises: &mysql.ExerciseModel{DB: db},
+		Health:    &mysql.HealthModel{DB: db},
 	}
 
 	router := gin.Default()
@@ -85,8 +86,6 @@ func main() {
 		apiV1.POST("/user/login", app.LoginUser)
 		apiV1.POST("/user/logout", app.LogoutUser) //TO-DO: Implement log out
 
-		apiV1.POST("/kitchen/bmr", app.GetBMR)
-
 		authorized := apiV1.Group("/")
 		authorized.Use(middlewares.AuthRequired())
 		{
@@ -97,6 +96,9 @@ func main() {
 			authorized.POST("/workout/add-workout", app.AddNewWorkout)
 			authorized.PUT("/workout/update-workout", app.UpdateWorkout)
 			authorized.DELETE("/workout/delete-workout/:id", app.DeleteWorkout)
+
+			authorized.POST("/health/track-body-weight", app.TrackBodyWeight)
+			authorized.POST("/health/bmr", app.GetBMR)
 		}
 
 	}
