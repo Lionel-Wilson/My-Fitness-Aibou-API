@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	apiModels "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
 	"github.com/Lionel-Wilson/My-Fitness-Aibou/pkg/models"
 	"github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
@@ -77,12 +78,12 @@ func (m *UserModel) Authenticate(email, password string) (int, error) {
 
 // We'll use the Get method to fetch details for a specific user based
 // on their user ID.
-func (m *UserModel) Get(id int) (*models.User, error) {
+func (m *UserModel) Get(id int) (*apiModels.UserDetails, error) {
 
-	var userDetails models.User
+	var userDetails apiModels.UserDetails
 
-	row := m.DB.QueryRow("SELECT user_name,about,first_name,last_name,email,country,hashed_password,dob,gender FROM myfitnessaiboudb.users where id= ?", id)
-	err := row.Scan(&userDetails.UserName, &userDetails.About, &userDetails.FirstName, &userDetails.LastName, &userDetails.Email, &userDetails.Country, &userDetails.HashedPassword, &userDetails.Dob, &userDetails.Gender)
+	row := m.DB.QueryRow("SELECT user_name,about,first_name,last_name,email,country,dob,gender FROM myfitnessaiboudb.users where id= ?", id)
+	err := row.Scan(&userDetails.UserName, &userDetails.About, &userDetails.FirstName, &userDetails.LastName, &userDetails.Email, &userDetails.Country, &userDetails.Dob, &userDetails.Gender)
 	if err == sql.ErrNoRows {
 		return nil, models.ErrNoRecord
 	} else if err != nil {

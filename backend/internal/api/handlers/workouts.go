@@ -1,0 +1,158 @@
+package handlers
+
+import (
+	"net/http"
+
+	apiModels "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
+	validators "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/validators"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/utils"
+	"github.com/gin-gonic/gin"
+)
+
+func (app *Application) AddNewWorkout(c *gin.Context) {
+	userId, err := utils.ExtractIntegerCookie(c, "userID")
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	var workout apiModels.AddNewWorkoutRequest
+
+	err = c.ShouldBindJSON(&workout)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	if len(workout.Exercises) < 1 {
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Invalid workout details", []string{"A workout must include at least 1 exercise"})
+		return
+	}
+
+	err = validate.Struct(workout)
+	if err != nil {
+		errMsg := validators.TranslateValidationErrors(err)
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Invalid workout details", errMsg)
+		return
+	}
+
+	workoutId, err := app.Workouts.Insert(userId, workout.WorkoutName, workout.Summary)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	for i := 0; i < len(workout.Exercises); i++ {
+		_, err = app.Exercises.Insert(workoutId, workout.Exercises[i])
+		if err != nil {
+			utils.ServerErrorResponse(c, err, "")
+			return
+		}
+	}
+
+	c.JSON(http.StatusCreated, "Workout successfully added!")
+}
+
+func (app *Application) GetAllWorkouts(c *gin.Context) {
+	userId, err := utils.ExtractIntegerCookie(c, "userID")
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	workouts, err := app.Workouts.GetAll(userId)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	var result []apiModels.Workout
+
+	for i := 0; i < len(workouts); i++ {
+
+		exercises, err := app.Exercises.GetAllExercisesViaWorkoutID(workouts[i].ID)
+		if err != nil {
+			utils.ServerErrorResponse(c, err, "")
+			return
+		}
+
+		workout := apiModels.Workout{
+			Id:          workouts[i].ID,
+			WorkoutName: workouts[i].WorkoutName,
+			Summary:     workouts[i].Summary,
+			Exercises:   exercises,
+		}
+
+		result = append(result, workout)
+
+	}
+
+	c.JSON(http.StatusOK, result)
+
+}
+
+func (app *Application) UpdateWorkout(c *gin.Context) {
+	var workout apiModels.UpdateWorkoutRequest
+
+	err := c.ShouldBindJSON(&workout)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	if len(workout.Exercises) < 1 {
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Invalid workout details", []string{"A workout must include at least 1 exercise"})
+		return
+	}
+
+	err = validate.Struct(workout)
+	if err != nil {
+		errMsg := validators.TranslateValidationErrors(err)
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Invalid workout details", errMsg)
+		return
+	}
+
+	err = app.Workouts.Update(workout.Id, workout.WorkoutName, workout.Summary)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	for i := 0; i < len(workout.Exercises); i++ {
+		err = app.Exercises.Update(workout.Exercises[i])
+		if err != nil {
+			utils.ServerErrorResponse(c, err, "")
+			return
+		}
+	}
+
+	c.JSON(http.StatusCreated, "Workout successfully updated!")
+}
+
+/* TO-DO: Decide if I still need it
+func (app *Application) GetWorkoutLog(c) {
+
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.Error(w, "Invalid id provided", http.StatusBadRequest)
+		return
+	}
+
+	result, err := app.workoutLogs.Get(id)
+	if err == models.ErrNoRecord {
+		http.NotFound(w, r)
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	resultJson, err := json.Marshal(result)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Write(resultJson)
+
+}
+*/

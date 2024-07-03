@@ -1,0 +1,160 @@
+package handlers
+
+import (
+	"errors"
+	"fmt"
+	"net/http"
+	"time"
+
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/middlewares"
+	apiModels "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
+	validators "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/validators"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/models"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/utils"
+	"github.com/gin-gonic/gin"
+)
+
+func (app *Application) SignUpUser(c *gin.Context) {
+	var signUpDetails apiModels.SignUpRequest
+
+	err := c.ShouldBindJSON(&signUpDetails)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	utils.TrimWhitespace(&signUpDetails)
+
+	err = validate.Struct(signUpDetails)
+	if err != nil {
+		errMsg := validators.TranslateValidationErrors(err)
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Invalid sign up details", errMsg)
+		return
+	}
+
+	dob, _ := time.Parse("2006-01-02", signUpDetails.DateOfBirth)
+
+	err = app.Users.Insert(signUpDetails.UserName, signUpDetails.FirstName, signUpDetails.LastName, signUpDetails.Gender, signUpDetails.Country, signUpDetails.Email, signUpDetails.About, signUpDetails.Password, dob)
+	if err == models.ErrDuplicateEmail {
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Invalid sign up details", []string{"Email is already in use"})
+		return
+	} else if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Your signup was successful. Please log in.",
+	})
+
+}
+
+func (app *Application) LoginUser(c *gin.Context) {
+	var loginDetails apiModels.LoginRequest
+	//session := sessions.Default(c)
+
+	err := c.ShouldBindJSON(&loginDetails)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	id, err := app.Users.Authenticate(loginDetails.Email, loginDetails.Password)
+	if errors.Is(err, models.ErrInvalidCredentials) {
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Authentication Failed", []string{"Email or Password is incorrect"})
+		return
+	} else if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	//JWT implementaion:
+	tokenString, err := middlewares.CreateToken(id)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "No userid found")
+	}
+
+	/*Session cookie authorisation implementation:
+	Setting the session variable so that we don't have to keep logging in
+	v := session.Get("userID")
+	if v == nil {
+		//cookie finished or first time logging in. Set the session variable userID, so we can check it when authenticating.
+		session.Set("userID", id)
+		err = session.Save()
+		if err != nil {
+			utils.ServerErrorResponse(c, err, "Failed to save session")
+			return
+		}
+
+	// Set the cookie in the response
+	expire := time.Now().Add(12 * time.Hour)
+	c.SetCookie(
+		"userID",
+		strconv.Itoa(id),
+		int(expire.Sub(time.Now()).Seconds()),
+		"/", "localhost", false,
+		true,
+	)
+	}*/
+
+	userDetails, err := app.Users.Get(id)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	c.SetCookie(
+		"jwtToken",
+		tokenString,
+		int(time.Now().Add(time.Hour*24).Unix()),
+		"/", "localhost", false,
+		true,
+	)
+	c.JSON(http.StatusOK, userDetails)
+}
+
+func (app *Application) LogoutUser(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logout the user...(fake)",
+	})
+}
+
+func (app *Application) AuthenticateUser(c *gin.Context) {
+	var userId int
+	err := c.ShouldBindJSON(&userId)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	_, err = app.Users.Get(userId)
+	if err != nil {
+		if err.Error() == models.ErrNoRecord.Error() {
+			utils.NewErrorResponse(c, http.StatusInternalServerError, "Authentication Failed", []string{fmt.Sprintf("User doesn't exist for provided userID - %d", userId)})
+			return
+		} else {
+			utils.ServerErrorResponse(c, err, "")
+			return
+		}
+	}
+
+	c.JSON(http.StatusOK, nil)
+}
+
+func (app *Application) GetUserDetails(c *gin.Context) {
+	var userId int
+
+	err := c.ShouldBindJSON(&userId)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	userDetails, err := app.Users.Get(userId)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	c.JSON(http.StatusOK, userDetails)
+}
