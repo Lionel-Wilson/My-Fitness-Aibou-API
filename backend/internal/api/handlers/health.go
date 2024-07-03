@@ -46,7 +46,7 @@ func (app *Application) TrackBodyWeight(c *gin.Context) {
 		return
 	}
 
-	app.Health.Insert(userId, bodyweight)
+	_, err = app.Health.Insert(userId, bodyweight)
 	if err != nil {
 		utils.ServerErrorResponse(c, err, "")
 		return
