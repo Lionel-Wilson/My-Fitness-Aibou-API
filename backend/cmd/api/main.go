@@ -100,6 +100,7 @@ func main() {
 			authorized.DELETE("/workout/delete-exercise/:id", app.DeleteExercise)
 
 			authorized.POST("/health/track-body-weight", app.TrackBodyWeight)
+			authorized.GET("/health/get-body-weight-data", app.GetBodyWeightData)
 			authorized.POST("/health/bmr", app.GetBMR)
 		}
 

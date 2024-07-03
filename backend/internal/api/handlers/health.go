@@ -56,6 +56,22 @@ func (app *Application) TrackBodyWeight(c *gin.Context) {
 
 }
 
+func (app *Application) GetBodyWeightData(c *gin.Context) {
+	userId, err := utils.ExtractIntegerCookie(c, "userID")
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	bodyWeightData, err := app.Health.GetBodyWeightData(userId)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	c.JSON(http.StatusOK, bodyWeightData)
+}
+
 func calculateBMR(userInfo models.GetBmrRequest) float64 {
 	//Mifflin-St Jeor Equation:
 	bmr := (10 * userInfo.Weight) + (6.25 * userInfo.Height) - (5 * userInfo.Age)
