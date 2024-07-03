@@ -96,14 +96,18 @@ func (app *Application) LoginUser(c *gin.Context) {
 	)
 	}*/
 
+	/* using cookies to send JWT token. Vulnerable to CRSF attacks. Easier to implement
 	c.SetCookie(
 		"jwtToken",
 		tokenString,
 		int(time.Now().Add(time.Hour*24).Unix()),
 		"/", "localhost", false,
 		true,
-	)
-	c.JSON(http.StatusOK, "Login Successful")
+	)*/
+	c.JSON(http.StatusOK, apiModels.LoginResponse{
+		Message: "Login Successful",
+		Token:   tokenString,
+	})
 }
 
 func (app *Application) LogoutUser(c *gin.Context) {

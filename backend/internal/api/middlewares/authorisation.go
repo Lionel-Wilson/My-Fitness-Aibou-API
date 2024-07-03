@@ -28,14 +28,14 @@ func AuthRequired() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		// Retrieve the token from the cookie
+		/* Retrieve the token from the cookie
 		tokenString, err := c.Cookie("jwtToken")
 		if err != nil {
 			utils.NewErrorResponse(c, http.StatusSeeOther, "Authorisation Failed", []string{"Token missing in cookie"})
 			c.Abort()
 			return
-		}
-		/* using header to look for token
+		}*/
+		//Using header to look for token
 		tokenString := c.GetHeader("Authorization")
 
 		if tokenString == "" {
@@ -44,7 +44,6 @@ func AuthRequired() gin.HandlerFunc {
 			return
 		}
 		tokenString = tokenString[len("Bearer "):]
-		*/
 
 		token, err := VerifyToken(tokenString)
 		if err != nil {
