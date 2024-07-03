@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -97,12 +96,6 @@ func (app *Application) LoginUser(c *gin.Context) {
 	)
 	}*/
 
-	userDetails, err := app.Users.Get(id)
-	if err != nil {
-		utils.ServerErrorResponse(c, err, "")
-		return
-	}
-
 	c.SetCookie(
 		"jwtToken",
 		tokenString,
@@ -110,7 +103,7 @@ func (app *Application) LoginUser(c *gin.Context) {
 		"/", "localhost", false,
 		true,
 	)
-	c.JSON(http.StatusOK, userDetails)
+	c.JSON(http.StatusOK, "Login Successful")
 }
 
 func (app *Application) LogoutUser(c *gin.Context) {
@@ -119,32 +112,8 @@ func (app *Application) LogoutUser(c *gin.Context) {
 	})
 }
 
-func (app *Application) AuthenticateUser(c *gin.Context) {
-	var userId int
-	err := c.ShouldBindJSON(&userId)
-	if err != nil {
-		utils.ServerErrorResponse(c, err, "")
-		return
-	}
-
-	_, err = app.Users.Get(userId)
-	if err != nil {
-		if err.Error() == models.ErrNoRecord.Error() {
-			utils.NewErrorResponse(c, http.StatusInternalServerError, "Authentication Failed", []string{fmt.Sprintf("User doesn't exist for provided userID - %d", userId)})
-			return
-		} else {
-			utils.ServerErrorResponse(c, err, "")
-			return
-		}
-	}
-
-	c.JSON(http.StatusOK, nil)
-}
-
 func (app *Application) GetUserDetails(c *gin.Context) {
-	var userId int
-
-	err := c.ShouldBindJSON(&userId)
+	userId, err := utils.ExtractIntegerCookie(c, "userID")
 	if err != nil {
 		utils.ServerErrorResponse(c, err, "")
 		return
@@ -158,3 +127,62 @@ func (app *Application) GetUserDetails(c *gin.Context) {
 
 	c.JSON(http.StatusOK, userDetails)
 }
+
+func (app *Application) UpdateUserDetails(c *gin.Context) {
+	userId, err := utils.ExtractIntegerCookie(c, "userID")
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	var userDetails apiModels.UpdateUserDetailsRequest
+
+	err = c.ShouldBindJSON(&userDetails)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	utils.TrimWhitespace(&userDetails)
+
+	err = validate.Struct(userDetails)
+	if err != nil {
+		errMsg := validators.TranslateValidationErrors(err)
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Failed to update profile", errMsg)
+		return
+	}
+
+	err = app.Users.Update(userId, userDetails)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	c.JSON(http.StatusOK, "Profile successfully updated!")
+}
+
+/*
+	TO-DO: Figure out if I still need this
+
+	func (app *Application) AuthenticateUser(c *gin.Context) {
+		var userId int
+		err := c.ShouldBindJSON(&userId)
+		if err != nil {
+			utils.ServerErrorResponse(c, err, "")
+			return
+		}
+
+		_, err = app.Users.Get(userId)
+		if err != nil {
+			if err.Error() == models.ErrNoRecord.Error() {
+				utils.NewErrorResponse(c, http.StatusInternalServerError, "Authentication Failed", []string{fmt.Sprintf("User doesn't exist for provided userID - %d", userId)})
+				return
+			} else {
+				utils.ServerErrorResponse(c, err, "")
+				return
+			}
+		}
+
+		c.JSON(http.StatusOK, nil)
+	}
+*/

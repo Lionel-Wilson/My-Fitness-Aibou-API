@@ -89,7 +89,8 @@ func main() {
 		authorized := apiV1.Group("/")
 		authorized.Use(middlewares.AuthRequired())
 		{
-			authorized.POST("/user/details", app.GetUserDetails)
+			authorized.GET("/user/details", app.GetUserDetails)
+			authorized.PUT("/user/update-details", app.UpdateUserDetails)
 			//authorized.POST("/user/authenticate", app.AuthenticateUser) TO-DO: decide if I still need this
 
 			authorized.GET("/workout/get-workouts", app.GetAllWorkouts)

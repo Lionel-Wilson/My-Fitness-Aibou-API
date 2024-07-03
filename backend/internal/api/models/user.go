@@ -4,7 +4,7 @@ import "time"
 
 type SignUpRequest struct {
 	UserName    string `json:"userName" validate:"required,alphanum"`
-	About       string `json:"about" validate:"alphanumunicode"`
+	About       string `json:"about" `
 	FirstName   string `json:"firstName" validate:"required,alpha"`
 	LastName    string `json:"lastName" validate:"required,alpha"`
 	Email       string `json:"email" validate:"required,email"`
@@ -14,15 +14,26 @@ type SignUpRequest struct {
 	Gender      string `json:"gender" validate:"oneof=Male Female"`
 }
 
+type UpdateUserDetailsRequest struct {
+	UserName  string `json:"userName" validate:"required,alphanum"`
+	About     string `json:"about" `
+	FirstName string `json:"firstName" validate:"required,alpha"`
+	LastName  string `json:"lastName" validate:"required,alpha"`
+	Email     string `json:"email" validate:"required,email"`
+	Country   string `json:"country" validate:"required,country_code"`
+	Dob       string `json:"dob" validate:"required,dateofbirth"`
+	Gender    string `json:"gender" validate:"oneof=Male Female"`
+}
+
 type UserDetails struct {
-	UserName  string    `json:"userName"`
-	About     string    `json:"about"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Email     string    `json:"email"`
-	Country   string    `json:"country"`
-	Dob       time.Time `json:"dob"`
-	Gender    string    `json:"gender"`
+	UserName  string    `json:"userName" validate:"required,alphanum"`
+	About     string    `json:"about" `
+	FirstName string    `json:"firstName" validate:"required,alpha"`
+	LastName  string    `json:"lastName" validate:"required,alpha"`
+	Email     string    `json:"email" validate:"required,email"`
+	Country   string    `json:"country" validate:"required,country_code"`
+	Dob       time.Time `json:"dob" validate:"required,dateofbirth"`
+	Gender    string    `json:"gender" validate:"oneof=Male Female"`
 }
 
 type LoginRequest struct {

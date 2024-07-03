@@ -2,10 +2,10 @@ package utils
 
 import (
 	"net/http"
+	"reflect"
 	"strconv"
 	"strings"
 
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,15 +17,15 @@ type ErrorResponse struct {
 	Errors     []string `json:"errors,omitempty"`
 }
 
-// TrimWhitespace trims leading and trailing whitespace from all string fields in SignUpRequest.
-func TrimWhitespace(signUpDetails *models.SignUpRequest) {
-	signUpDetails.FirstName = strings.TrimSpace(signUpDetails.FirstName)
-	signUpDetails.LastName = strings.TrimSpace(signUpDetails.LastName)
-	signUpDetails.UserName = strings.TrimSpace(signUpDetails.UserName)
-	signUpDetails.Email = strings.TrimSpace(signUpDetails.Email)
-	signUpDetails.UserName = strings.TrimSpace(signUpDetails.UserName)
-	signUpDetails.About = strings.TrimSpace(signUpDetails.About)
-	signUpDetails.Password = strings.TrimSpace(signUpDetails.Password)
+// TrimWhitespace trims leading and trailing whitespace from all string fields in a given struct.
+func TrimWhitespace(v interface{}) {
+	val := reflect.ValueOf(v).Elem()
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
+		if field.Kind() == reflect.String {
+			field.SetString(strings.TrimSpace(field.String()))
+		}
+	}
 }
 
 // NewErrorResponse creates a new error response with the provided status code, message, and errors.

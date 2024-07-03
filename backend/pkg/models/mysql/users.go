@@ -91,3 +91,19 @@ func (m *UserModel) Get(id int) (*apiModels.UserDetails, error) {
 	}
 	return &userDetails, nil
 }
+
+func (m *UserModel) Update(userId int, userDetails apiModels.UpdateUserDetailsRequest) error {
+
+	query := `
+		UPDATE myfitnessaiboudb.users
+		SET user_name = ?, about = ? , first_name = ? , last_name = ? , country = ? , email = ? , dob = ? , gender = ? 
+		WHERE id = ?;
+		`
+
+	_, err := m.DB.Exec(query, userDetails.UserName, userDetails.About, userDetails.FirstName, userDetails.LastName, userDetails.Country, userDetails.Email, userDetails.Dob, userDetails.Gender, userId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
