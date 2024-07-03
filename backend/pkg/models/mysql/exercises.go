@@ -91,3 +91,17 @@ func (m *ExerciseModel) Update(exercise apiModels.Exercise) error {
 
 	return nil
 }
+
+func (m *ExerciseModel) DeleteExercisesViaWorkoutId(WorkoutId int) error {
+
+	query := `
+		DELETE FROM exercises WHERE workout_id = ?;
+		`
+
+	_, err := m.DB.Exec(query, WorkoutId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

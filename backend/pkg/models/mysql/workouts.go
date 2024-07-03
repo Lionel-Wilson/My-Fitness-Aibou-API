@@ -96,3 +96,17 @@ func (m *WorkoutModel) Update(WorkoutId int, WorkoutName string, Summary string)
 
 	return nil
 }
+
+func (m *WorkoutModel) Delete(WorkoutId int) error {
+
+	query := `
+		DELETE FROM workouts WHERE id = ?;
+		`
+
+	_, err := m.DB.Exec(query, WorkoutId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

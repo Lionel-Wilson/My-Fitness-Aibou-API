@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	apiModels "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
 	validators "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/validators"
@@ -126,7 +127,30 @@ func (app *Application) UpdateWorkout(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusCreated, "Workout successfully updated!")
+	c.JSON(http.StatusOK, "Workout successfully updated!")
+}
+
+func (app *Application) DeleteWorkout(c *gin.Context) {
+	workoutId := c.Param("id")
+	workoutIDInt, err := strconv.Atoi(workoutId)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	err = app.Exercises.DeleteExercisesViaWorkoutId(workoutIDInt)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	err = app.Workouts.Delete(workoutIDInt)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	c.JSON(http.StatusOK, "Workout successfully deleted!")
 }
 
 /* TO-DO: Decide if I still need it

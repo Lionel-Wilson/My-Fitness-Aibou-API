@@ -96,6 +96,7 @@ func main() {
 			authorized.GET("/workout/get-workouts", app.GetAllWorkouts)
 			authorized.POST("/workout/add-workout", app.AddNewWorkout)
 			authorized.PUT("/workout/update-workout", app.UpdateWorkout)
+			authorized.DELETE("/workout/delete-workout/:id", app.DeleteWorkout)
 		}
 
 	}
