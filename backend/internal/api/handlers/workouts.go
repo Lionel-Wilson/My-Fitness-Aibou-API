@@ -152,6 +152,22 @@ func (app *Application) DeleteWorkout(c *gin.Context) {
 
 	c.JSON(http.StatusOK, "Workout successfully deleted!")
 }
+func (app *Application) DeleteExercise(c *gin.Context) {
+	exerciseId := c.Param("id")
+	exerciseIdInt, err := strconv.Atoi(exerciseId)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	err = app.Exercises.DeleteExercise(exerciseIdInt)
+	if err != nil {
+		utils.ServerErrorResponse(c, err, "")
+		return
+	}
+
+	c.JSON(http.StatusOK, "Exercise successfully deleted!")
+}
 
 /* TO-DO: Decide if I still need it
 func (app *Application) GetWorkoutLog(c) {

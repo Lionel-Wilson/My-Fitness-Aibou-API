@@ -96,6 +96,7 @@ func main() {
 			authorized.POST("/workout/add-workout", app.AddNewWorkout)
 			authorized.PUT("/workout/update-workout", app.UpdateWorkout)
 			authorized.DELETE("/workout/delete-workout/:id", app.DeleteWorkout)
+			authorized.DELETE("/workout/delete-exercise/:id", app.DeleteExercise)
 
 			authorized.POST("/health/track-body-weight", app.TrackBodyWeight)
 			authorized.POST("/health/bmr", app.GetBMR)
