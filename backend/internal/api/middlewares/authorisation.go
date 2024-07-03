@@ -64,7 +64,7 @@ func AuthRequired() gin.HandlerFunc {
 			Value:    userID,
 			MaxAge:   60,
 			Domain:   "localhost",
-			Secure:   false,
+			Secure:   true,
 			HttpOnly: true,
 		})
 

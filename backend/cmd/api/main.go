@@ -67,6 +67,7 @@ func main() {
 		Health:    &mysql.HealthModel{DB: db},
 	}
 
+	//gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	store := cookie.NewStore([]byte(secret))
@@ -107,5 +108,9 @@ func main() {
 	}
 	infoLog.Printf("Starting server on %s", addr)
 
-	router.Run(addr)
+	router.RunTLS(addr, "./tls/cert.pem", "./tls/key.pem")
+	//router.Run(addr)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
 }
