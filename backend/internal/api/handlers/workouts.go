@@ -71,14 +71,14 @@ func (app *Application) GetAllWorkouts(c *gin.Context) {
 
 	for i := 0; i < len(workouts); i++ {
 
-		exercises, err := app.Exercises.GetAllExercisesViaWorkoutID(workouts[i].ID)
+		exercises, err := app.Exercises.GetAllExercisesViaWorkoutID(workouts[i].Id)
 		if err != nil {
 			utils.ServerErrorResponse(c, err, "")
 			return
 		}
 
 		workout := models.Workout{
-			Id:          workouts[i].ID,
+			Id:          workouts[i].Id,
 			WorkoutName: workouts[i].WorkoutName,
 			Summary:     workouts[i].Summary,
 			Exercises:   exercises,
