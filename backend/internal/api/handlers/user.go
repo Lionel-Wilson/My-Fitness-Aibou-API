@@ -6,15 +6,15 @@ import (
 	"time"
 
 	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/middlewares"
-	apiModels "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
 	validators "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/validators"
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/models"
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/utils"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/utils"
+
 	"github.com/gin-gonic/gin"
 )
 
 func (app *Application) SignUpUser(c *gin.Context) {
-	var signUpDetails apiModels.SignUpRequest
+	var signUpDetails models.SignUpRequest
 
 	err := c.ShouldBindJSON(&signUpDetails)
 	if err != nil {
@@ -31,7 +31,11 @@ func (app *Application) SignUpUser(c *gin.Context) {
 		return
 	}
 
-	dob, _ := time.Parse("2006-01-02", signUpDetails.DateOfBirth)
+	dob, err := time.Parse("2006-01-02", signUpDetails.DateOfBirth)
+	if err != nil {
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Error parsing date of birth", []string{err.Error()})
+		return
+	}
 
 	err = app.Users.Insert(signUpDetails.UserName, signUpDetails.FirstName, signUpDetails.LastName, signUpDetails.Gender, signUpDetails.Country, signUpDetails.Email, signUpDetails.About, signUpDetails.Password, dob)
 	if err == models.ErrDuplicateEmail {
@@ -49,7 +53,7 @@ func (app *Application) SignUpUser(c *gin.Context) {
 }
 
 func (app *Application) LoginUser(c *gin.Context) {
-	var loginDetails apiModels.LoginRequest
+	var loginDetails models.LoginRequest
 	//session := sessions.Default(c)
 
 	err := c.ShouldBindJSON(&loginDetails)
@@ -104,7 +108,7 @@ func (app *Application) LoginUser(c *gin.Context) {
 		"/", "localhost", false,
 		true,
 	)*/
-	c.JSON(http.StatusOK, apiModels.LoginResponse{
+	c.JSON(http.StatusOK, models.LoginResponse{
 		Message: "Login Successful",
 		Token:   tokenString,
 	})
@@ -139,7 +143,7 @@ func (app *Application) UpdateUserDetails(c *gin.Context) {
 		return
 	}
 
-	var userDetails apiModels.UpdateUserDetailsRequest
+	var userDetails models.UpdateUserDetailsRequest
 
 	err = c.ShouldBindJSON(&userDetails)
 	if err != nil {
@@ -156,7 +160,14 @@ func (app *Application) UpdateUserDetails(c *gin.Context) {
 		return
 	}
 
-	err = app.Users.Update(userId, userDetails)
+	dob, err := time.Parse("2006-01-02", userDetails.Dob)
+	if err != nil {
+		utils.NewErrorResponse(c, http.StatusBadRequest, "Error parsing date of birth", []string{err.Error()})
+		return
+	}
+
+	err = app.Users.Update(userId, userDetails.UserName, userDetails.FirstName, userDetails.LastName, userDetails.Gender, userDetails.Country,
+		userDetails.Email, userDetails.About, dob)
 	if err != nil {
 		utils.ServerErrorResponse(c, err, "")
 		return

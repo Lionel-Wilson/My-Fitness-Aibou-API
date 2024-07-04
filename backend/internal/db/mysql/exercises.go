@@ -3,22 +3,21 @@ package mysql
 import (
 	"database/sql"
 
-	apiModels "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/models"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
 )
 
 type ExerciseModel struct {
 	DB *sql.DB
 }
 
-func (m *ExerciseModel) Insert(workoutID int, exercise apiModels.Exercise) (int, error) {
+func (m *ExerciseModel) Insert(workoutID int, exerciseName, notes string, weight float64, reps, sets int) (int, error) {
 
 	query := `
 		INSERT INTO exercises (workout_id, exercise_name, weight, reps, sets, notes, created)
 		VALUES(?, ?, ?, ?, ?, ?, UTC_TIMESTAMP());
 		`
 
-	result, err := m.DB.Exec(query, workoutID, exercise.ExerciseName, exercise.Weight, exercise.Reps, exercise.Sets, exercise.Notes)
+	result, err := m.DB.Exec(query, workoutID, exerciseName, weight, reps, sets, notes)
 	if err != nil {
 		return 0, err
 	}
@@ -30,8 +29,8 @@ func (m *ExerciseModel) Insert(workoutID int, exercise apiModels.Exercise) (int,
 	return int(id), nil
 }
 
-func (m *ExerciseModel) Get(workoutId int) (*apiModels.Exercise, error) {
-	result := &apiModels.Exercise{}
+func (m *ExerciseModel) Get(workoutId int) (*models.Exercise, error) {
+	result := &models.Exercise{}
 
 	query := `SELECT id, exercise_name, weight, reps, sets, notes FROM exercises WHERE workout_id = ?;`
 
@@ -45,7 +44,7 @@ func (m *ExerciseModel) Get(workoutId int) (*apiModels.Exercise, error) {
 	return result, nil
 }
 
-func (m *ExerciseModel) GetAllExercisesViaWorkoutID(workoutId int) ([]*apiModels.Exercise, error) {
+func (m *ExerciseModel) GetAllExercisesViaWorkoutID(workoutId int) ([]*models.Exercise, error) {
 
 	query := `
 	SELECT id, exercise_name, weight, reps, sets, notes FROM myfitnessaiboudb.exercises WHERE workout_id=?;
@@ -58,10 +57,10 @@ func (m *ExerciseModel) GetAllExercisesViaWorkoutID(workoutId int) ([]*apiModels
 	}
 	defer rows.Close()
 
-	exercises := []*apiModels.Exercise{}
+	exercises := []*models.Exercise{}
 
 	for rows.Next() {
-		e := &apiModels.Exercise{}
+		e := &models.Exercise{}
 
 		err = rows.Scan(&e.Id, &e.ExerciseName, &e.Weight, &e.Reps, &e.Sets, &e.Notes)
 		if err != nil {
@@ -76,7 +75,7 @@ func (m *ExerciseModel) GetAllExercisesViaWorkoutID(workoutId int) ([]*apiModels
 	return exercises, nil
 }
 
-func (m *ExerciseModel) Update(exercise apiModels.Exercise) error {
+func (m *ExerciseModel) Update(exerciseName, notes string, weight float64, reps, sets, exerciseId int) error {
 
 	query := `
 		UPDATE exercises
@@ -84,7 +83,7 @@ func (m *ExerciseModel) Update(exercise apiModels.Exercise) error {
 		WHERE id = ?;
 		`
 
-	_, err := m.DB.Exec(query, exercise.ExerciseName, exercise.Weight, exercise.Reps, exercise.Sets, exercise.Notes, exercise.Id)
+	_, err := m.DB.Exec(query, exerciseName, weight, reps, sets, notes, exerciseId)
 	if err != nil {
 		return err
 	}

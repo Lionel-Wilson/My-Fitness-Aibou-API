@@ -8,7 +8,7 @@ import (
 
 	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/handlers"
 	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/middlewares"
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/models/mysql"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/db/mysql"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -40,7 +40,7 @@ func buildConnectionString() string {
 }
 
 func main() {
-	// Load environment variables
+	// Load environment variables. Uncomment when running locally and not in container
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")

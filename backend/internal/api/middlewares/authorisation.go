@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/utils"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )

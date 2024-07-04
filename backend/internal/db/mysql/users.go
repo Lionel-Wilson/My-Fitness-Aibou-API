@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	apiModels "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
 	"github.com/Lionel-Wilson/My-Fitness-Aibou/pkg/models"
 	"github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
@@ -78,9 +77,9 @@ func (m *UserModel) Authenticate(email, password string) (int, error) {
 
 // We'll use the Get method to fetch details for a specific user based
 // on their user ID.
-func (m *UserModel) Get(id int) (*apiModels.UserDetails, error) {
+func (m *UserModel) Get(id int) (*models.User, error) {
 
-	var userDetails apiModels.UserDetails
+	var userDetails models.User
 
 	row := m.DB.QueryRow("SELECT user_name,about,first_name,last_name,email,country,dob,gender FROM myfitnessaiboudb.users where id= ?", id)
 	err := row.Scan(&userDetails.UserName, &userDetails.About, &userDetails.FirstName, &userDetails.LastName, &userDetails.Email, &userDetails.Country, &userDetails.Dob, &userDetails.Gender)
@@ -92,7 +91,7 @@ func (m *UserModel) Get(id int) (*apiModels.UserDetails, error) {
 	return &userDetails, nil
 }
 
-func (m *UserModel) Update(userId int, userDetails apiModels.UpdateUserDetailsRequest) error {
+func (m *UserModel) Update(userId int, userName, firstName, lastName, gender, country, email, about string, dateOfBirth time.Time) error {
 
 	query := `
 		UPDATE myfitnessaiboudb.users
@@ -100,7 +99,7 @@ func (m *UserModel) Update(userId int, userDetails apiModels.UpdateUserDetailsRe
 		WHERE id = ?;
 		`
 
-	_, err := m.DB.Exec(query, userDetails.UserName, userDetails.About, userDetails.FirstName, userDetails.LastName, userDetails.Country, userDetails.Email, userDetails.Dob, userDetails.Gender, userId)
+	_, err := m.DB.Exec(query, userName, about, firstName, lastName, country, email, dateOfBirth, gender, userId)
 	if err != nil {
 		return err
 	}

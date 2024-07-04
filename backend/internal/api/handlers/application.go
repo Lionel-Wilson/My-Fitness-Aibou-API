@@ -4,7 +4,7 @@ import (
 	"log"
 
 	validators "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/validators"
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/models/mysql"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/db/mysql"
 	"github.com/go-playground/validator/v10"
 )
 

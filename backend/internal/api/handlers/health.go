@@ -5,7 +5,7 @@ import (
 
 	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
 	validators "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/validators"
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/utils"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/utils"
 	"github.com/gin-gonic/gin"
 )
 

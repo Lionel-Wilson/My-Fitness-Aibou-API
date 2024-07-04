@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	apiModels "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
 	validators "github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/validators"
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/pkg/utils"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,7 +17,7 @@ func (app *Application) AddNewWorkout(c *gin.Context) {
 		return
 	}
 
-	var workout apiModels.AddNewWorkoutRequest
+	var workout models.AddNewWorkoutRequest
 
 	err = c.ShouldBindJSON(&workout)
 	if err != nil {
@@ -44,7 +44,7 @@ func (app *Application) AddNewWorkout(c *gin.Context) {
 	}
 
 	for i := 0; i < len(workout.Exercises); i++ {
-		_, err = app.Exercises.Insert(workoutId, workout.Exercises[i])
+		_, err = app.Exercises.Insert(workoutId, workout.Exercises[i].ExerciseName, workout.Exercises[i].Notes, workout.Exercises[i].Weight, workout.Exercises[i].Reps, workout.Exercises[i].Sets)
 		if err != nil {
 			utils.ServerErrorResponse(c, err, "")
 			return
@@ -67,7 +67,7 @@ func (app *Application) GetAllWorkouts(c *gin.Context) {
 		return
 	}
 
-	var result []apiModels.Workout
+	var result []models.Workout
 
 	for i := 0; i < len(workouts); i++ {
 
@@ -77,7 +77,7 @@ func (app *Application) GetAllWorkouts(c *gin.Context) {
 			return
 		}
 
-		workout := apiModels.Workout{
+		workout := models.Workout{
 			Id:          workouts[i].ID,
 			WorkoutName: workouts[i].WorkoutName,
 			Summary:     workouts[i].Summary,
@@ -93,7 +93,7 @@ func (app *Application) GetAllWorkouts(c *gin.Context) {
 }
 
 func (app *Application) UpdateWorkout(c *gin.Context) {
-	var workout apiModels.UpdateWorkoutRequest
+	var workout models.UpdateWorkoutRequest
 
 	err := c.ShouldBindJSON(&workout)
 	if err != nil {
@@ -120,7 +120,7 @@ func (app *Application) UpdateWorkout(c *gin.Context) {
 	}
 
 	for i := 0; i < len(workout.Exercises); i++ {
-		err = app.Exercises.Update(workout.Exercises[i])
+		err = app.Exercises.Update(workout.Exercises[i].ExerciseName, workout.Exercises[i].Notes, workout.Exercises[i].Weight, workout.Exercises[i].Reps, workout.Exercises[i].Sets, workout.Exercises[i].Id)
 		if err != nil {
 			utils.ServerErrorResponse(c, err, "")
 			return

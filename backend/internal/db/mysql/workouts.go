@@ -48,7 +48,7 @@ func (m *WorkoutModel) Insert(UserId int, WorkoutName string, Summary string) (i
 func (m *WorkoutModel) GetAll(userId int) ([]*models.Workout, error) {
 
 	query := `
-	SELECT * FROM myfitnessaiboudb.workouts WHERE user_id=?;
+	SELECT id, user_id, workout_name, summary, created FROM myfitnessaiboudb.workouts WHERE user_id=?;
 	`
 
 	rows, err := m.DB.Query(query, userId)
