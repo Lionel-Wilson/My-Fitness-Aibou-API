@@ -3,7 +3,7 @@ package mysql
 import (
 	"database/sql"
 
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/pkg/models"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou/backend/internal/api/models"
 )
 
 type WorkoutModel struct {
@@ -48,7 +48,7 @@ func (m *WorkoutModel) Insert(UserId int, WorkoutName string, Summary string) (i
 func (m *WorkoutModel) GetAll(userId int) ([]*models.Workout, error) {
 
 	query := `
-	SELECT id, user_id, workout_name, summary, created FROM myfitnessaiboudb.workouts WHERE user_id=?;
+	SELECT id, workout_name, summary FROM myfitnessaiboudb.workouts WHERE user_id=?;
 	`
 
 	rows, err := m.DB.Query(query, userId)
@@ -68,7 +68,7 @@ func (m *WorkoutModel) GetAll(userId int) ([]*models.Workout, error) {
 		// must be pointers to the place you want to copy the data into, and the
 		// number of arguments must be exactly the same as the number of
 		// columns returned by your statement.
-		err = rows.Scan(&w.ID, &w.UserId, &w.WorkoutName, &w.Summary, &w.Created)
+		err = rows.Scan(&w.Id, &w.WorkoutName, &w.Summary)
 		if err != nil {
 			return nil, err
 		}
