@@ -26,7 +26,7 @@
 
 - Create an account
 - Log in
-- User Dashboard - Allows user to calculate BMR, Create Workouts, track weight overtime and many more fitness related things.
+- Allows user to calculate BMR, Create Workouts, track weight overtime and many more fitness related things.
 
 ## Project Status
 
