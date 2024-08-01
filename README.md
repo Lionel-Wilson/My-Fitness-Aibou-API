@@ -35,7 +35,7 @@
 
 #### 1. Sign Up User
 
-- **Endpoint**: `/signup`
+- **Endpoint**: `/user/signup`
 - **Method**: `POST`
 - **Description**: Signs up a new user.
 - **Request Body**:
@@ -84,7 +84,7 @@
 
 #### 2. Login User
 
-- **Endpoint**: `/login`
+- **Endpoint**: `/user/login`
 - **Method**: `POST`
 - **Description**: Logs in an existing user.
 - **Request Body**:
@@ -128,7 +128,7 @@
 
 #### 3. Logout User
 
-- **Endpoint**: `/logout`
+- **Endpoint**: `/user/logout`
 - **Method**: `POST`
 - **Description**: Logs out the current user.
 
@@ -176,7 +176,7 @@
 
 #### 5. Update User Details
 
-- **Endpoint**: `/user/update`
+- **Endpoint**: `/user/update-details`
 - **Method**: `PUT`
 - **Description**: Updates the details of the logged-in user.
 - **Request Body**:
@@ -271,7 +271,7 @@
 
 #### 2. Track Body Weight
 
-- **Endpoint**: `/health/weight`
+- **Endpoint**: `/health/track-body-weight`
 - **Method**: `POST`
 - **Description**: Tracks the body weight of the user.
 - **Request Body**:
@@ -289,6 +289,186 @@
   ```json
   {
     "message": "Weight successfully tracked!"
+  }
+  ```
+
+- **Failure (500 Internal Server Error)**:
+
+  ```json
+  {
+    "statusCode": 500,
+    "message": "Something went wrong. Please try again later."
+  }
+  ```
+
+### Workout Endpoints
+
+#### 1. Add New Workout
+
+- **Endpoint**: `/workout/add-workout`
+- **Method**: `POST`
+- **Description**: Adds a new workout.
+- **Request Body**:
+
+  ```json
+  {
+    "WorkoutName": "Leg Day",
+    "Summary": "A tough leg day workout",
+    "Exercises": [
+      {
+        "ExerciseName": "Squats",
+        "Notes": "3 sets of 10",
+        "Weight": 100,
+        "Reps": 10,
+        "Sets": 3
+      }
+    ]
+  }
+  ```
+
+#### Responses
+
+- **Success (201 Created)**:
+
+  ```json
+  {
+    "message": "Workout successfully added!"
+  }
+  ```
+
+- **Validation Error (400 Bad Request)**:
+
+  ```json
+  {
+    "statusCode": 400,
+    "message": "Invalid workout details",
+    "errors": ["A workout must include at least 1 exercise"]
+  }
+  ```
+
+- **Failure (500 Internal Server Error)**:
+
+  ```json
+  {
+    "statusCode": 500,
+    "message": "Something went wrong. Please try again later."
+  }
+  ```
+
+#### 2. Get All Workouts
+
+- **Endpoint**: `/workout/get-workouts`
+- **Method**: `GET`
+- **Description**: Retrieves all workouts for the user.
+
+#### Responses
+
+- **Success (200 OK)**:
+
+  ```json
+  [
+    {
+      "workoutId": 1,
+      "workoutName": "Back day",
+      "summary": "Workout for 12th July",
+      "exercises": [
+        {
+          "exerciseId": 1,
+          "exerciseName": "Pull ups",
+          "weight": 50,
+          "reps": 2,
+          "sets": 5,
+          "notes": "api test exercise notes"
+        },
+        {
+          "exerciseId": 2,
+          "exerciseName": "lat pull down",
+          "weight": 200,
+          "reps": 2,
+          "sets": 5,
+          "notes": "api test exercise notes"
+        },
+        {
+          "exerciseId": 3,
+          "exerciseName": "api test exercise 3",
+          "weight": 56,
+          "reps": 2,
+          "sets": 3,
+          "notes": "api test exercise notes"
+        }
+      ]
+    }
+  ]
+  ```
+
+- **Failure (500 Internal Server Error)**:
+
+  ```json
+  {
+    "statusCode": 500,
+    "message": "Something went wrong. Please try again later."
+  }
+  ```
+
+#### 3. Update Workout
+
+- **Endpoint**: `/workout/update-workout`
+- **Method**: `PUT`
+- **Description**: Updates a workout by name.
+- **Request Body**:
+
+  ```json
+  {
+    "workoutId": 1,
+    "workoutName": "Chest day",
+    "summary": "Workout for 12th July",
+    "exercises": [
+      {
+        "exerciseId": 1,
+        "exerciseName": "Bench press",
+        "weight": 100,
+        "reps": 4,
+        "sets": 5,
+        "notes": "Explosve reps"
+      },
+      {
+        "exerciseId": 2,
+        "exerciseName": "Weighted Dips",
+        "weight": 25,
+        "reps": 3,
+        "sets": 5,
+        "notes": "explosive dips"
+      }
+    ]
+  }
+  ```
+
+#### Responses
+
+- **Success (200 OK)**:
+
+  ```json
+  {
+    "message": "Workout successfully updated!"
+  }
+  ```
+
+- **Validation Error (400 Bad Request)**:
+
+  ```json
+  {
+    "statusCode": 400,
+    "message": "Invalid workout details",
+    "errors": ["Invalid exercise data"]
+  }
+  ```
+
+- **Not Found (404 Not Found)**:
+
+  ```json
+  {
+    "statusCode": 404,
+    "message": "Workout not found"
   }
   ```
 
