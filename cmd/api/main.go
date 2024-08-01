@@ -75,8 +75,8 @@ func parseMySQLURL(mysqlURL string) (string, error) {
 	// Extract the database name from the path
 	dbname := strings.TrimPrefix(u.Path, "/")
 
-	// Construct the DSN (Data Source Name)
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, password, host, port, dbname)
+	// Construct the DSN (Data Source Name) with sql_mode
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&sql_mode=''", user, password, host, port, dbname)
 	return dsn, nil
 }
 
