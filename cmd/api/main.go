@@ -12,7 +12,6 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -51,11 +50,11 @@ func buildConnectionString() string {
 }
 
 func main() {
-	// Load environment variables. Uncomment when running locally and not in container
+	/* Load environment variables. Uncomment when running locally and not in container
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
-	}
+	}*/
 	addr := os.Getenv("DEV_ADDRESS")
 	connectionString := buildConnectionString()
 	secret := os.Getenv("SECRET")
