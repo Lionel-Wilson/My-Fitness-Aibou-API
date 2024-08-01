@@ -7,6 +7,7 @@
 - [General Info](#general-information)
 - [Technologies Used](#technologies-used)
 - [Current Features](#current-features)
+- [Endpoints](#endpoints)
 - [Project Status](#project-status)
 <!-- * [License](#license) -->
 
@@ -210,6 +211,84 @@
     "statusCode": 400,
     "message": "Failed to update profile",
     "errors": ["Error parsing date of birth"]
+  }
+  ```
+
+- **Failure (500 Internal Server Error)**:
+
+  ```json
+  {
+    "statusCode": 500,
+    "message": "Something went wrong. Please try again later."
+  }
+  ```
+
+### Health Endpoints
+
+#### 1. Get BMR
+
+- **Endpoint**: `/health/bmr`
+- **Method**: `POST`
+- **Description**: Calculates the BMR (Basal Metabolic Rate) based on user details.
+- **Request Body**:
+  ```json
+  {
+    "Weight": 70,
+    "Height": 175,
+    "Age": 30,
+    "Gender": "Male"
+  }
+  ```
+
+#### Responses
+
+- **Success (200 OK)**:
+
+  ```json
+  {
+    "bmr": 1700.5
+  }
+  ```
+
+- **Validation Error (400 Bad Request)**:
+
+  ```json
+  {
+    "statusCode": 400,
+    "message": "Invalid BMR details",
+    "errors": ["Weight is required"]
+  }
+  ```
+
+- **Failure (500 Internal Server Error)**:
+
+  ```json
+  {
+    "statusCode": 500,
+    "message": "Something went wrong. Please try again later."
+  }
+  ```
+
+#### 2. Track Body Weight
+
+- **Endpoint**: `/health/weight`
+- **Method**: `POST`
+- **Description**: Tracks the body weight of the user.
+- **Request Body**:
+
+  ```json
+  {
+    "bodyweight": 70.5
+  }
+  ```
+
+#### Responses
+
+- **Success (200 OK)**:
+
+  ```json
+  {
+    "message": "Weight successfully tracked!"
   }
   ```
 
