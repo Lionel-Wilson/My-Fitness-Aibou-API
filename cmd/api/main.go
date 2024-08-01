@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 
@@ -40,6 +39,7 @@ func buildConnectionString() string {
 	return connectionString
 }*/
 
+/*Uncomment when running locally
 func buildConnectionString() string {
 	user := os.Getenv("USER")
 	password := os.Getenv("PASSWORD")
@@ -47,7 +47,7 @@ func buildConnectionString() string {
 
 	connectionString := fmt.Sprintf(`%s:%s@/%s?parseTime=true`, user, password, database)
 	return connectionString
-}
+}*/
 
 func main() {
 	/* Load environment variables. Uncomment when running locally and not in container
@@ -56,7 +56,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}*/
 	addr := os.Getenv("DEV_ADDRESS")
-	connectionString := buildConnectionString()
+	//connectionString := buildConnectionString() Uncomment when running locally
+	connectionString := os.Getenv("MYSQL_URL")
 	secret := os.Getenv("SECRET")
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
