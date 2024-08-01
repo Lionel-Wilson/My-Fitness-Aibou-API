@@ -2,8 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+	"net/url"
 	"os"
+	"strings"
 
 	"github.com/Lionel-Wilson/My-Fitness-Aibou-API/internal/api/handlers"
 	"github.com/Lionel-Wilson/My-Fitness-Aibou-API/internal/api/middlewares"
@@ -49,6 +52,34 @@ func buildConnectionString() string {
 	return connectionString
 }*/
 
+func parseMySQLURL(mysqlURL string) (string, error) {
+	// Parse the URL
+	u, err := url.Parse(mysqlURL)
+	if err != nil {
+		return "", err
+	}
+
+	// Ensure the scheme is correct
+	if u.Scheme != "mysql" {
+		return "", fmt.Errorf("invalid scheme: %s", u.Scheme)
+	}
+
+	// Extract user information
+	user := u.User.Username()
+	password, _ := u.User.Password()
+
+	// Extract the hostname and port
+	host := u.Hostname()
+	port := u.Port()
+
+	// Extract the database name from the path
+	dbname := strings.TrimPrefix(u.Path, "/")
+
+	// Construct the DSN (Data Source Name)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, password, host, port, dbname)
+	return dsn, nil
+}
+
 func main() {
 	/* Load environment variables. Uncomment when running locally and not in container
 	err := godotenv.Load()
@@ -57,11 +88,22 @@ func main() {
 	}*/
 	addr := os.Getenv("DEV_ADDRESS")
 	//connectionString := buildConnectionString() Uncomment when running locally
-	connectionString := os.Getenv("MYSQL_URL")
+	mysqlURL := os.Getenv("MYSQL_URL")
 	secret := os.Getenv("SECRET")
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+
+	if mysqlURL == "" {
+		errorLog.Fatal("MYSQL_URL is not set or empty")
+	}
+
+	connectionString, err := parseMySQLURL(mysqlURL)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
+	infoLog.Printf("Using connection string: %s", connectionString)
 
 	db, err := openDB(connectionString)
 	if err != nil {
