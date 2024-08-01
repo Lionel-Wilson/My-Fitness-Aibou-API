@@ -47,7 +47,7 @@ func (m *ExerciseModel) Get(workoutId int) (*models.Exercise, error) {
 func (m *ExerciseModel) GetAllExercisesViaWorkoutID(workoutId int) ([]*models.Exercise, error) {
 
 	query := `
-	SELECT id, exercise_name, weight, reps, sets, notes FROM myfitnessaiboudb.exercises WHERE workout_id=?;
+	SELECT id, exercise_name, weight, reps, sets, notes FROM exercises WHERE workout_id=?;
 	`
 
 	rows, err := m.DB.Query(query, workoutId)

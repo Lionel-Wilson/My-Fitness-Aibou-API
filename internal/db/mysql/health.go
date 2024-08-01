@@ -32,7 +32,7 @@ func (m *HealthModel) Insert(userId int, weight float32) (int, error) {
 func (m *HealthModel) GetBodyWeightData(userId int) ([]*models.BodyWeightData, error) {
 
 	query := `
-	SELECT weight, created FROM myfitnessaiboudb.bodyweight WHERE user_id=?;
+	SELECT weight, created FROM bodyweight WHERE user_id=?;
 	`
 
 	rows, err := m.DB.Query(query, userId)

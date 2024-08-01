@@ -81,7 +81,7 @@ func (m *UserModel) Get(id int) (*models.User, error) {
 
 	var userDetails models.User
 
-	row := m.DB.QueryRow("SELECT user_name,about,first_name,last_name,email,country,dob,gender FROM myfitnessaiboudb.users where id= ?", id)
+	row := m.DB.QueryRow("SELECT user_name,about,first_name,last_name,email,country,dob,gender FROM users where id= ?", id)
 	err := row.Scan(&userDetails.UserName, &userDetails.About, &userDetails.FirstName, &userDetails.LastName, &userDetails.Email, &userDetails.Country, &userDetails.Dob, &userDetails.Gender)
 	if err == sql.ErrNoRows {
 		return nil, models.ErrNoRecord
@@ -94,7 +94,7 @@ func (m *UserModel) Get(id int) (*models.User, error) {
 func (m *UserModel) Update(userId int, userName, firstName, lastName, gender, country, email, about string, dateOfBirth time.Time) error {
 
 	query := `
-		UPDATE myfitnessaiboudb.users
+		UPDATE users
 		SET user_name = ?, about = ? , first_name = ? , last_name = ? , country = ? , email = ? , dob = ? , gender = ? 
 		WHERE id = ?;
 		`
