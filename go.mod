@@ -41,7 +41,6 @@ require (
 
 require (
 	github.com/Lionel-Wilson/My-Fitness-Aibou v0.0.0-20240701170439-748a18b09008
-	github.com/joho/godotenv v1.5.1
 	github.com/rs/cors v1.11.0
 	golang.org/x/crypto v0.24.0
 	golang.org/x/sys v0.21.0 // indirect
