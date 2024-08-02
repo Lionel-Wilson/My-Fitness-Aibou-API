@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Lionel-Wilson/My-Fitness-Aibou/pkg/models"
+	"github.com/Lionel-Wilson/My-Fitness-Aibou-API/internal/api/models"
 	"github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
 )
