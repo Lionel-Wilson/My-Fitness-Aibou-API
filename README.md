@@ -35,7 +35,7 @@
 
 #### 1. Sign Up User
 
-- **Endpoint**: `/user/signup`
+- **Endpoint**: `/users`
 - **Method**: `POST`
 - **Description**: Signs up a new user.
 - **Request Body**:
@@ -84,7 +84,7 @@
 
 #### 2. Login User
 
-- **Endpoint**: `/user/login`
+- **Endpoint**: `/users/login`
 - **Method**: `POST`
 - **Description**: Logs in an existing user.
 - **Request Body**:
@@ -128,7 +128,7 @@
 
 #### 3. Logout User
 
-- **Endpoint**: `/user/logout`
+- **Endpoint**: `/users/logout`
 - **Method**: `POST`
 - **Description**: Logs out the current user.
 
@@ -144,7 +144,7 @@
 
 #### 4. Get User Details
 
-- **Endpoint**: `/user/details`
+- **Endpoint**: `/users/details`
 - **Method**: `GET`
 - **Description**: Retrieves the details of the logged-in user.
 
@@ -176,7 +176,7 @@
 
 #### 5. Update User Details
 
-- **Endpoint**: `/user/update-details`
+- **Endpoint**: `/users/details`
 - **Method**: `PUT`
 - **Description**: Updates the details of the logged-in user.
 - **Request Body**:
@@ -271,7 +271,7 @@
 
 #### 2. Track Body Weight
 
-- **Endpoint**: `/health/track-body-weight`
+- **Endpoint**: `/health/body-weight`
 - **Method**: `POST`
 - **Description**: Tracks the body weight of the user.
 - **Request Body**:
@@ -301,11 +301,27 @@
   }
   ```
 
+#### 3. Get Body Weight
+
+- **Endpoint**: `/health/body-weight`
+- **Method**: `GET`
+- **Description**: Retrieves the historic body weight data of the user.
+
+#### Responses
+
+- **Success (200 OK)**:
+
+  ```json
+  {
+    "message": "In progress"
+  }
+  ```
+
 ### Workout Endpoints
 
 #### 1. Add New Workout
 
-- **Endpoint**: `/workout/add-workout`
+- **Endpoint**: `/workouts`
 - **Method**: `POST`
 - **Description**: Adds a new workout.
 - **Request Body**:
@@ -357,7 +373,7 @@
 
 #### 2. Get All Workouts
 
-- **Endpoint**: `/workout/get-workouts`
+- **Endpoint**: `/workouts`
 - **Method**: `GET`
 - **Description**: Retrieves all workouts for the user.
 
@@ -412,7 +428,7 @@
 
 #### 3. Update Workout
 
-- **Endpoint**: `/workout/update-workout`
+- **Endpoint**: `/workouts`
 - **Method**: `PUT`
 - **Description**: Updates a workout by name.
 - **Request Body**:

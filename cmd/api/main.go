@@ -136,25 +136,26 @@ func main() {
 
 	apiV1 := router.Group("/api/v1")
 	{
-		apiV1.POST("/user/signup", app.SignUpUser)
-		apiV1.POST("/user/login", app.LoginUser)
-		apiV1.POST("/user/logout", app.LogoutUser) //TO-DO: Implement log out
+		apiV1.POST("/users", app.SignUpUser)
+		apiV1.POST("/users/login", app.LoginUser)
+		apiV1.POST("/users/logout", app.LogoutUser) //TO-DO: Implement log out
 
 		authorized := apiV1.Group("/")
 		authorized.Use(middlewares.AuthRequired())
 		{
-			authorized.GET("/user/details", app.GetUserDetails)
-			authorized.PUT("/user/update-details", app.UpdateUserDetails)
-			//authorized.POST("/user/authenticate", app.AuthenticateUser) TO-DO: decide if I still need this
+			authorized.GET("/users/details", app.GetUserDetails)
+			authorized.PUT("/users/details", app.UpdateUserDetails)
+			//authorized.POST("/users/authenticate", app.AuthenticateUser) TO-DO: decide if I still need this
 
-			authorized.GET("/workout/get-workouts", app.GetAllWorkouts)
-			authorized.POST("/workout/add-workout", app.AddNewWorkout)
-			authorized.PUT("/workout/update-workout", app.UpdateWorkout)
-			authorized.DELETE("/workout/delete-workout/:id", app.DeleteWorkout)
-			authorized.DELETE("/workout/delete-exercise/:id", app.DeleteExercise)
+			authorized.GET("/workouts", app.GetAllWorkouts)
+			authorized.POST("/workouts", app.AddNewWorkout)
+			authorized.PUT("/workouts", app.UpdateWorkout) // TO-DO: update so that workout id is a path parameter.e.g. /workouts/:id
+			authorized.DELETE("/workouts/:id", app.DeleteWorkout)
 
-			authorized.POST("/health/track-body-weight", app.TrackBodyWeight)
-			authorized.GET("/health/get-body-weight-data", app.GetBodyWeightData)
+			authorized.DELETE("/workouts/exercises/:id", app.DeleteExercise)
+
+			authorized.POST("/health/body-weight", app.TrackBodyWeight)
+			authorized.GET("/health/body-weight", app.GetBodyWeightData)
 			authorized.POST("/health/bmr", app.GetBMR)
 		}
 
